@@ -16,13 +16,13 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "@types/styled-components": "^4.1.18",
     "rollup": "^1.17.0",
     "rollup-plugin-typescript": "^1.0.1",
     "tslib": "^1.10.0",
     "typescript": "^3.5.3"
   },
-  "dependencies": {
-    "styled-components": "^4.3.2"
+  "peerDependencies": {
+    "@types/styled-components": "^4.x",
+    "styled-components": "^4.x"
   }
 }

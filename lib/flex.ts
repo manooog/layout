@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { FlexProps } from "r-layout";
+import { FlexProps } from "react-simple-layout";
 import box from "./box";
 
 enum mainMap {

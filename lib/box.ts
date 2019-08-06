@@ -1,16 +1,73 @@
 import styled from "styled-components";
-import { BaseProps, StyleHandler } from "r-layout";
+import { BaseProps, StyleHandler } from "react-simple-layout";
+import config from "./config";
+import { strLikeNum } from "./util";
+
+const sizeValue = (str: string | number): string => {
+  if (typeof str === "number" || strLikeNum(str)) {
+    return str + config.getConfig().unit;
+  } else {
+    return str;
+  }
+};
+
+const colorValue = (source: string | number) => {
+  try {
+    let color = config.getConfig().colors[+source];
+    if (color) {
+      return `color: ${color}`;
+    } else {
+      return `color: ${color}`;
+    }
+  } catch (error) {
+    console.warn("要使用色条，请先设置文字色条");
+    return "";
+  }
+};
 
 const STYLE_HANDLERS: StyleHandler[] = [
   {
     name: "size",
     match: ["height", "width"],
     method: (prop, size: number | string): string => {
-      if (typeof size === "number" || !Number.isNaN(+size)) {
-        return prop + ":" + size + "px";
-      } else {
-        return prop + ":" + size;
+      return prop + ":" + sizeValue(size);
+    }
+  },
+  {
+    name: "font",
+    match: ["f", "fc", "fw"],
+    method: (prop, size: number | string): string => {
+      let result = "";
+      if (prop === "f") {
+        let [colorIndex, fontSize] = (size as string).split(",");
+        result = `font-size: ${sizeValue(fontSize)};${colorValue(colorIndex)};`;
       }
+      if (prop === "fc") {
+        result = colorValue(size) + ";";
+      }
+      if (prop === "fw") {
+        result = `font-weight: ${size}` + ";";
+      }
+      return result;
+    }
+  },
+  {
+    name: "flex-shink",
+    match: ["fls", "flg"],
+    method: (prop, size: number | string): string => {
+      if (prop === "fls") {
+        return `flex-shrink: ${size};`;
+      }
+      if (prop === "flg") {
+        return `flex-grow: ${size};`;
+      }
+    }
+  },
+  {
+    name: "flex-shink",
+    match: ["bg"],
+    method: (prop, size: number | string): string => {
+      return `background: ${size};`;
     }
   },
   {
@@ -33,9 +90,10 @@ const STYLE_HANDLERS: StyleHandler[] = [
         h: "left|right",
         v: "top|bottom"
       };
+      size = sizeValue(size);
       // mgt mgb mgr mgl mgh mgv mg
       if (prop.length === 2) {
-        return `${propMap[prop]}: ${size}px`;
+        return `${propMap[prop]}: ${size}`;
       }
 
       let prefix = prop.slice(0, 2);
@@ -44,7 +102,7 @@ const STYLE_HANDLERS: StyleHandler[] = [
 
       return directionMap[sufix]
         .split("|")
-        .map(s => `${propMap[prefix]}-${s}: ${size}px`)
+        .map(s => `${propMap[prefix]}-${s}: ${size}`)
         .join(";");
     }
   }
@@ -76,4 +134,5 @@ const handlerProps = (props: BaseProps): string => {
 
 export default styled.div<BaseProps>`
   ${props => handlerProps(props)}
+  box-sizing: border-box
 `;
