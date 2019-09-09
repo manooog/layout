@@ -9,7 +9,7 @@ declare module "react-simple-layout" {
     unit?: "rem" | "px";
     colors?: Array<string>;
   }
-  interface BaseProps {
+  type BaseProps = {
     style?: React.CSSProperties;
     height?: number | string;
     width?: number | string;
@@ -35,7 +35,7 @@ declare module "react-simple-layout" {
     fls?: number | string;
     flg?: number | string;
     bg?: string;
-  }
+  } & React.ComponentProps<any>;
   interface FlexProps extends BaseProps {
     /**
      * 主轴对齐方式
